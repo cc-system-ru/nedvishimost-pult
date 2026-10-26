@@ -1,0 +1,13 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Вход — пульт агентства</title><link rel="stylesheet" href="/style.css"></head>
+<body><div class="wrap"><form class="card" id="f">
+<h1>Пульт агентства</h1><p>Рубан Недвижимость · вход для сотрудников</p>
+<label>Логин<input id="login" autocomplete="username" required autofocus></label>
+<label>Пароль<input id="password" type="password" autocomplete="current-password" required></label>
+<button class="primary" type="submit">Войти</button><div class="err" id="err"></div>
+<p style="font-size:13px">Нет логина или забыли пароль — обратитесь к собственнику агентства.</p>
+</form></div>
+<script>
+document.getElementById('f').onsubmit=async e=>{e.preventDefault();const err=document.getElementById('err');err.textContent='';
+ const r=await fetch('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({login:login.value,password:password.value})});
+ if(r.ok)location.href='/';else{const j=await r.json().catch(()=>({}));err.textContent=j.message||'Не удалось войти'}};
+</script></body></html>

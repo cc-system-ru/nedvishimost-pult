@@ -1,0 +1,13 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Первый запуск — пульт агентства</title><link rel="stylesheet" href="/style.css"></head>
+<body><div class="wrap"><form class="card" id="f">
+<h1>Первый запуск</h1><p>Создайте учётную запись собственника. Остальных сотрудников добавите потом в разделе «Сотрудники».</p>
+<label>Ваше имя<input id="name" required placeholder="Алексей Рубан"></label>
+<label>Логин<input id="login" required autocomplete="username" placeholder="ruban"></label>
+<label>Пароль (от 8 символов)<input id="password" type="password" minlength="8" required autocomplete="new-password"></label>
+<button class="primary" type="submit">Создать и войти</button><div class="err" id="err"></div>
+</form></div>
+<script>
+document.getElementById('f').onsubmit=async e=>{e.preventDefault();const err=document.getElementById('err');err.textContent='';
+ const r=await fetch('/api/setup',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:name.value,login:login.value,password:password.value})});
+ if(r.ok)location.href='/';else{const j=await r.json().catch(()=>({}));err.textContent=j.message||'Не удалось создать'}};
+</script></body></html>

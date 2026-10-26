@@ -1,0 +1,23 @@
+# Альтернатива install.sh: docker compose up -d --build
+# Перед запуском: cp .env.example .env и укажите DOMAIN ниже (или оставьте :80)
+services:
+  app:
+    build: .
+    env_file: .env
+    environment:
+      - DATA_DIR=/data
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+  caddy:
+    image: caddy:2
+    ports: ["80:80", "443:443"]
+    environment:
+      - DOMAIN=${DOMAIN:-:80}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [app]
+    restart: unless-stopped
+volumes:
+  caddy_data:

@@ -1,0 +1,28 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Сотрудники — пульт агентства</title><link rel="stylesheet" href="/style.css"></head>
+<body><div class="wrap wide">
+<div class="card">
+ <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h1>Сотрудники</h1><a class="btn" href="/">← В пульт</a></div>
+ <p>Роль определяет, что человек видит. Собственник — всё. РОП — свой офис, без финансов собственника (офис он выберет при первом входе). Агент — только свои сделки; при первом входе выбирает себя в списке агентов, РОП подтверждает.</p>
+ <form class="row" id="f">
+  <label>Имя<input id="name" required></label>
+  <label>Логин<input id="login" required></label>
+  <label>Пароль (от 8)<input id="password" minlength="8" required></label>
+  <label>Роль<select id="role"><option value="agent">Агент</option><option value="rop">РОП</option><option value="owner">Собственник</option></select></label>
+  <button class="primary" type="submit" style="flex:0">Добавить</button>
+ </form>
+ <div class="err" id="err"></div><div class="okmsg" id="ok"></div>
+ <div class="table-wrap"><table><thead><tr><th>Имя</th><th>Логин</th><th>Роль</th><th>Статус</th><th></th></tr></thead><tbody id="list"></tbody></table></div>
+</div></div>
+<script>
+const RN={owner:'Собственник',rop:'РОП',agent:'Агент'};const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+async function call(m,u,b){const r=await fetch(u,{method:m,headers:{'content-type':'application/json'},body:b?JSON.stringify(b):undefined});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.message||'Ошибка');return j}
+function msg(ok,t){$('#err').textContent=ok?'':t;$('#ok').textContent=ok?t:''}
+async function load(){const us=await call('GET','/api/users');$('#list').innerHTML=us.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.login)}</td><td><select data-role="${u.id}">${Object.entries(RN).map(([k,v])=>`<option value="${k}"${k===u.role?' selected':''}>${v}</option>`).join('')}</select></td><td>${u.disabled?'отключён':'активен'}</td><td style="white-space:nowrap"><button class="small" data-pass="${u.id}">Новый пароль</button> <button class="small" data-dis="${u.id}" data-v="${u.disabled?0:1}">${u.disabled?'Включить':'Отключить'}</button></td></tr>`).join('')}
+$('#f').onsubmit=async e=>{e.preventDefault();try{await call('POST','/api/users',{name:name.value,login:login.value,password:password.value,role:role.value});msg(true,`Добавлен: ${name.value}. Передайте логин «${login.value}» и пароль лично.`);e.target.reset();load()}catch(x){msg(false,x.message)}};
+$('#list').addEventListener('change',async e=>{const id=e.target.dataset.role;if(!id)return;try{await call('PATCH','/api/users/'+id,{role:e.target.value});msg(true,'Роль изменена')}catch(x){msg(false,x.message);load()}});
+$('#list').addEventListener('click',async e=>{const b=e.target;try{
+ if(b.dataset.pass){const p=prompt('Новый пароль (от 8 символов)');if(!p)return;await call('PATCH','/api/users/'+b.dataset.pass,{password:p});msg(true,'Пароль изменён, старые входы сброшены')}
+ if(b.dataset.dis){await call('PATCH','/api/users/'+b.dataset.dis,{disabled:b.dataset.v==='1'});msg(true,'Готово');load()}}catch(x){msg(false,x.message)}});
+load().catch(x=>msg(false,x.message));
+</script></body></html>
