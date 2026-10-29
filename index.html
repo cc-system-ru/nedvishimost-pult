@@ -4,7 +4,7 @@
 <script>/* GitHub Pages и локальный файл: демо-режим без сервера */if(!window.claude&&(/github\.io$/.test(location.hostname)||location.protocol==="file:"||location.hostname==="localhost"))document.write('<script src="app/public/local-shim.js"><\/script>');</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <style>
 /* Layout: operating console for an agency with 2 offices — left rail (6 views + office switch); each view opens with what needs action, detail below. */
 :root{
@@ -193,64 +193,159 @@ pre.form-out{white-space:pre-wrap;font:inherit;font-size:13.5px;background:var(-
 #ownerKpis,#meKpis{display:none!important} /* v6: заменены первым экраном, цифры не дублируются */
 #mePlan{grid-template-columns:minmax(0,1fr)}
 #mePlan>:nth-child(1),#mePlan>:nth-child(2),#mePlan>:nth-child(4){display:none} /* v6: % плана, run rate и задатки — в плитках первого экрана */
-/* ===================== v7: новая палитра — тёмно-синяя панель, светлый фон, синий акцент ===================== */
+/* ===================== v8: стиль «строгий финтех» (только визуал; логика, тексты и порядок блоков не менялись) ===================== */
+/* v8: палитра и типографика */
 :root{
-  --bg:#F4F6FB; --surface:#FFFFFF; --sunk:#EEF1F8; --ink:#1A1F3A; --muted:#4A5070; --faint:#7B819E; --line:#E4E7F0;
-  --accent:#4361EE; --accent-ink:#FFFFFF; --accent-soft:#E9EDFF;
-  --crit:#E5484D; --crit-soft:#FDEDEE; --warn:#D9811A; --warn-soft:#FEF4E6; --ok:#2E9E6A; --ok-soft:#E7F6EE;
-  --s0:#A3ABC4; --s1:#6C8CF5; --s2:#4361EE; --s3:#7C5CF0; --s4:#E7A23B; --s5:#B064E8; --s6:#2E9E6A; --s7:#E5484D; --s8:#E06BA5;
-  --brand:'Golos Text','Segoe UI',Arial,sans-serif;
-  --rail:#1B2140; --rail-2:#252C52; --rail-ink:#E8EBFA; --rail-muted:#A4ABCB; --r:16px;
+  --bg:#F5F6F8; --surface:#FFFFFF; --sunk:#F3F4F6; --hover:#F9FAFB; --ink:#111827; --muted:#6B7280; --faint:#6B7280; --line:#E5E7EB;
+  --accent:#1E3A5F; --accent-ink:#FFFFFF; --accent-soft:#EEF2F7;
+  --ok:#16A34A; --warn:#D97706; --crit:#DC2626; --ok-soft:transparent; --warn-soft:transparent; --crit-soft:transparent;
+  --s0:#9CA3AF; --s1:#64748B; --s2:#475569; --s3:#1E3A5F; --s4:#D97706; --s5:#334155; --s6:#16A34A; --s7:#DC2626; --s8:#B45309;
+  --ui:'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif; --brand:var(--ui); --r:10px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0F1324; --surface:#171C33; --sunk:#1F2542; --ink:#E9ECFA; --muted:#B7BDD8; --faint:#8C93B3; --line:#2A3152;
-  --accent:#7B93FF; --accent-ink:#0F1324; --accent-soft:#232C5C;
-  --crit:#FF7B7F; --crit-soft:#3A1E26; --warn:#F2B25C; --warn-soft:#3A2C17; --ok:#5ED39A; --ok-soft:#173326;
-  --rail:#0B0F1F; --rail-2:#161B33; --rail-ink:#E8EBFA; --rail-muted:#8F96B8}}
-:root[data-theme="dark"]{--bg:#0F1324; --surface:#171C33; --sunk:#1F2542; --ink:#E9ECFA; --muted:#B7BDD8; --faint:#8C93B3; --line:#2A3152;
-  --accent:#7B93FF; --accent-ink:#0F1324; --accent-soft:#232C5C; --crit:#FF7B7F; --crit-soft:#3A1E26; --warn:#F2B25C; --warn-soft:#3A2C17; --ok:#5ED39A; --ok-soft:#173326;
-  --rail:#0B0F1F; --rail-2:#161B33; --rail-ink:#E8EBFA; --rail-muted:#8F96B8}
-body{letter-spacing:-.003em}
-/* боковая панель: тёмно-синяя */
-aside.rail{background:var(--rail);border-right:0;color:var(--rail-ink)}
-@media (max-width:960px){aside.rail{border-bottom:0}}
-aside.rail .brand b{color:#FFFFFF;font-size:17px;font-weight:800}
-aside.rail .brand span{color:var(--rail-muted)}
-aside.rail label.f{color:var(--rail-muted)}
-aside.rail select,aside.rail input{background:var(--rail-2);border-color:transparent;color:var(--rail-ink)}
-aside.rail select:focus{outline-color:var(--accent)}
-aside.rail .pill.mute{background:rgba(255,255,255,.1);color:var(--rail-ink)}
-aside.rail .btn{background:transparent;border-color:rgba(255,255,255,.18);color:var(--rail-ink)}
-aside.rail .btn:hover{border-color:var(--accent);background:rgba(255,255,255,.06)}
-aside.rail .rail-foot{color:var(--rail-muted)}
-aside.rail .badge{color:#FFFFFF}
-#roleChip{background:rgba(255,255,255,.12)!important;color:#FFFFFF!important}
-nav button{color:var(--rail-muted);font-weight:600}
-nav button:hover{background:rgba(255,255,255,.07);color:#FFFFFF}
-nav button[aria-current="page"]{background:var(--accent);color:#FFFFFF;box-shadow:0 6px 16px rgba(67,97,238,.35)}
-.badge{background:#FF6B6F;color:#FFFFFF}
-/* карточки и плитки */
-.card,.tile{border-color:var(--line);box-shadow:0 1px 2px rgba(26,31,58,.04),0 8px 24px rgba(26,31,58,.06)}
-.tile{border-radius:18px;padding:18px 20px}
-.tile .k{letter-spacing:.03em;font-size:12px;color:var(--faint)}
-.tile .v{font-family:var(--brand);font-weight:800;letter-spacing:-.025em}
-.kpi .v{font-family:var(--brand);font-weight:800}
-.top h1{font-family:var(--brand);font-weight:800;letter-spacing:-.025em}
-.meter{background:var(--sunk);height:7px}.meter i{background:linear-gradient(90deg,#6C8CF5,#4361EE)}
-.btn{border-radius:11px}
-.btn.primary{box-shadow:0 6px 14px rgba(67,97,238,.28)}
-.btn.ai{border-color:var(--accent-soft);background:var(--accent-soft);color:var(--accent)}
-input,select,textarea{background:var(--sunk);border-color:transparent}
-.insight{border-radius:14px;border-left:4px solid currentColor}
-.demobar{border-radius:14px;box-shadow:0 1px 2px rgba(26,31,58,.04),0 8px 24px rgba(26,31,58,.06)}
-.seg button[aria-pressed="true"]{color:var(--accent)}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#FFFFFF}
-.col{background:var(--sunk);border-radius:16px}
-.lead{border-radius:12px;box-shadow:0 1px 2px rgba(26,31,58,.05)}
-.lead:hover{border-color:var(--accent);box-shadow:0 6px 16px rgba(26,31,58,.08)}
-.alert{background:var(--sunk);border-radius:12px}
-th{color:var(--faint)}
-.banner{border-radius:14px}
+  --bg:#0B0F17; --surface:#111827; --sunk:#1F2937; --hover:#1A2230; --ink:#F3F4F6; --muted:#9CA3AF; --faint:#9CA3AF; --line:#273244;
+  --accent:#93B4DD; --accent-ink:#0B0F17; --accent-soft:#1B2A3E; --ok:#22C55E; --warn:#F59E0B; --crit:#EF4444}}
+:root[data-theme="dark"]{--bg:#0B0F17; --surface:#111827; --sunk:#1F2937; --hover:#1A2230; --ink:#F3F4F6; --muted:#9CA3AF; --faint:#9CA3AF; --line:#273244;
+  --accent:#93B4DD; --accent-ink:#0B0F17; --accent-soft:#1B2A3E; --ok:#22C55E; --warn:#F59E0B; --crit:#EF4444}
+body{font-family:var(--ui);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}
+
+/* v8: боковая панель — белая, тонкая граница; акцент только у активного раздела */
+aside.rail{background:var(--surface);border-right:1px solid var(--line);gap:20px}
+.brand b{font-family:var(--ui);font-size:15px;font-weight:600;letter-spacing:-.01em}
+.brand span{font-size:12px;color:var(--muted)}
+nav{gap:2px}
+nav button{font-weight:500;color:var(--muted);border-radius:8px;padding:8px 12px;position:relative}
+nav button:hover{background:var(--hover);color:var(--ink)}
+nav button[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav button[aria-current="page"]::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+@media (max-width:960px){nav button[aria-current="page"]::before{left:8px;right:8px;top:auto;bottom:0;width:auto;height:2px;border-radius:2px}}
+/* v8: счётчик в меню — без заливки: точка + число */
+.badge{background:transparent;color:var(--crit);font-weight:600;padding:0;min-width:0;display:inline-flex;align-items:center;gap:5px}
+.badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--crit)}
+#roleChip{background:transparent!important;color:var(--muted)!important;padding:0;font-weight:500}
+
+/* v8: заголовки, карточки, отступы */
+main{padding-block:24px 56px}
+@media (min-width:961px){main{padding-left:32px;padding-right:max(32px, env(safe-area-inset-right, 0px))}}
+.view{gap:20px}
+.grid{gap:16px}
+.top h1{font-family:var(--ui);font-size:22px;font-weight:600;letter-spacing:-.015em}
+.top p{color:var(--muted);font-size:13px}
+.card{border:1px solid var(--line);border-radius:10px;padding:20px 24px;box-shadow:0 1px 2px rgba(0,0,0,.04);gap:12px}
+@media (max-width:640px){.card{padding:16px}}
+.card h2{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px;font-weight:400}
+.note{color:var(--muted)}
+
+/* v8: KPI-плитки — сетка 12 колонок, крупная цифра 32–40px/600, подпись 12–13px */
+.fs{grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.fs>.tile{grid-column:span 3}
+#fsOwner>.tile:nth-child(n+5),#fsRop>.tile:nth-child(n+5){grid-column:span 6}
+#fsAgent{grid-template-columns:repeat(5,minmax(0,1fr))}#fsAgent>.tile{grid-column:auto}
+@media (max-width:1280px){#fsAgent{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1100px){.fs,#fsAgent{grid-template-columns:repeat(2,minmax(0,1fr))}.fs>.tile,#fsOwner>.tile:nth-child(n+5),#fsRop>.tile:nth-child(n+5){grid-column:auto}}
+@media (max-width:640px){.fs,#fsAgent{grid-template-columns:minmax(0,1fr)}}
+.tile{border:1px solid var(--line);border-radius:10px;padding:20px 22px;box-shadow:0 1px 2px rgba(0,0,0,.04);gap:6px}
+.tile .k{font-size:12px;font-weight:500;letter-spacing:.02em;text-transform:none;color:var(--muted);display:flex;align-items:center;gap:8px}
+/* v8: маленький индикатор статуса у подписи плитки (точка 8px) */
+.tile .k::after{content:"";width:8px;height:8px;border-radius:50%;background:transparent;margin-left:auto}
+.tile.ok .k::after{background:var(--ok)}.tile.warn .k::after{background:var(--warn)}.tile.crit .k::after{background:var(--crit)}
+.tile .v{font-family:var(--ui);font-size:clamp(30px,2.6vw,38px);font-weight:600;letter-spacing:-.025em;color:var(--ink)}
+.tile .d{font-size:12.5px;color:var(--muted);font-weight:400}
+.tile .dot{width:10px;height:10px}
+/* v8: статус показываем цветом цифры, без заливок */
+.tile.crit .v{color:var(--crit)}.tile.warn .v{color:var(--warn)}.tile.ok .v{color:var(--ink)}
+/* v8: подсказка агенту — тонкая полоса слева вместо заливки */
+.tile .fix,.fix.crit,.fix.warn,.fix.ok{background:transparent;border-radius:0;padding:2px 0 2px 10px;font-size:13px;font-weight:500;color:var(--ink);border-left:2px solid var(--line)}
+.fix.crit{border-left-color:var(--crit)}.fix.warn{border-left-color:var(--warn)}.fix.ok{border-left-color:var(--ok)}
+.tile ul{font-size:13px;gap:6px}
+.tile li::before{width:8px;height:8px}
+.kpi .k{font-size:12px;font-weight:500;letter-spacing:.02em;text-transform:none;color:var(--muted)}
+.kpi .v{font-family:var(--ui);font-size:32px;font-weight:600;letter-spacing:-.025em}
+
+/* v8: прогресс-бары тонкие, цвет по статусу */
+.meter{height:5px;border-radius:99px;background:var(--sunk)}
+.meter i{background:var(--accent);border-radius:99px}
+.tile.ok .meter i{background:var(--ok)}.tile.warn .meter i{background:var(--warn)}.tile.crit .meter i{background:var(--crit)}
+.mini .b{height:5px}
+.fbar{height:6px;border-radius:99px}.fbar i{border-radius:99px}
+.frow{font-size:13px}
+#lostBox .fbar i{background:var(--s1)!important} /* v8: причины отказов — нейтральным, красный только для статусов */
+
+/* v8: главный вывод — белая плашка с тонкой полосой слева */
+.insight,.insight.crit,.insight.warn,.insight.ok{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:10px;font-weight:500;font-size:14px;padding:12px 16px}
+.insight.crit{border-left-color:var(--crit)}.insight.warn{border-left-color:var(--warn)}.insight.ok{border-left-color:var(--ok)}
+.insight.crit svg{color:var(--crit)}.insight.warn svg{color:var(--warn)}.insight.ok svg{color:var(--ok)}
+
+/* v8: статусы «срочно/внимание/норма» — точка 8px + текст, без плашек */
+.pill,.pill.crit,.pill.warn,.pill.ok,.pill.mute{background:transparent;color:var(--ink);padding:0;border-radius:0;font-size:12.5px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--s0);flex:none}
+.pill.crit::before{background:var(--crit)}.pill.warn::before{background:var(--warn)}.pill.ok::before{background:var(--ok)}
+.pill.mute{color:var(--muted)}
+
+/* v8: списки событий — строки с разделителями, hover #F9FAFB */
+.alerts{gap:0}
+.alert{background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:10px 4px}
+.alert:last-child{border-bottom:0}
+.alert:hover{background:var(--hover);border-color:var(--line)}
+.alert .t{font-weight:500}
+.alert .m{color:var(--muted);font-size:12.5px}
+
+/* v8: таблицы — только горизонтальные разделители, hover-строка */
+table{font-size:13.5px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--line)}
+th{font-size:12px;font-weight:500;letter-spacing:.04em;color:var(--muted)}
+tbody tr:hover td{background:var(--hover)}
+
+/* v8: кнопки — акцентная тёмно-синяя, вторичные белые с границей */
+.btn{border-radius:8px;font-weight:500;background:var(--surface);border:1px solid var(--line);box-shadow:none;color:var(--ink)}
+.btn:hover{border-color:#D1D5DB;background:var(--hover)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:none}
+.btn.primary:hover{background:#17304F}
+.btn.ai{background:var(--surface);border-color:var(--line);color:var(--accent)}
+.btn.ai::before{content:none} /* v8: без декоративного значка */
+.btn.danger{color:var(--crit);border-color:var(--line)}
+
+/* v8: поля ввода */
+input,select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(30,58,95,.25);border-color:var(--accent)}
+label.f{font-weight:500;color:var(--muted);font-size:12.5px}
+
+/* v8: вкладки, переключатели, фильтры */
+.tabs button{font-weight:500;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--accent);border-color:var(--accent)}
+.chip{border-radius:8px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.seg{background:var(--sunk);border-radius:8px}
+.seg button{border-radius:6px;font-weight:500}
+.seg button[aria-pressed="true"]{color:var(--accent);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.demobar{border-radius:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.demobar .t{color:var(--muted);font-weight:500}
+
+/* v8: баннеры и служебные блоки — без заливок */
+.banner{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;font-weight:500}
+.ai-out{background:var(--hover);border:1px solid var(--line);border-radius:8px}
+.ai-off{background:transparent;padding:0;color:var(--muted);font-weight:500}
+.po{background:var(--hover);border:1px solid var(--line);border-radius:8px}
+.po .v{font-weight:600}
+
+/* v8: воронка */
+.col{background:var(--hover);border:1px solid var(--line);border-radius:10px}
+.col h3{font-weight:600;color:var(--muted)}
+.lead{border-radius:8px;box-shadow:none}
+.lead:hover{border-color:#D1D5DB;background:var(--hover)}
+.lead .n{font-weight:600}
+
+/* v8: аккордеоны — секции разделены линиями */
+.card.acc>.acc-h h2{font-size:16px;font-weight:600}
+.acc-chev{border-radius:6px}
+
+/* v8: диалоги и всплывашки */
+dialog{border-radius:12px;border:1px solid var(--line)}
+.toast{border-radius:8px;font-weight:500}
+
+/* v8: адаптив таблиц — горизонтальная прокрутка на телефоне */
+@media (max-width:640px){.table-wrap{margin:0 -16px;padding:0 16px}table{font-size:13px}}
 </style>
 
 <div class="app">
