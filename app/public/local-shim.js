@@ -81,12 +81,7 @@
   const dbNs = Object.freeze({ collection: c => query(c, {}), doc: p => docRef(p) });
   window.claude = Object.freeze({ use: async n => ({ db: dbNs, user, downloads })[n] || null });
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const main = document.querySelector('main'); if (!main) return;
-    const b = document.createElement('div');
-    b.className = 'banner';
-    b.innerHTML = '<span>Демо-режим: данные хранятся только в этом браузере и не видны другим сотрудникам, ИИ выключен. Для работы команды пульт запускается на сервере агентства.</span><button class="btn small" id="localReset">Сбросить демо</button>';
-    main.prepend(b);
-    b.querySelector('#localReset').onclick = () => { try { localStorage.removeItem(KEY); } catch (_) {} location.reload(); };
-  });
+  /* v6: флаг демо-витрины. По нему пульт показывает в шапке переключатель ролей
+     и кнопку «Сбросить демо» (раньше здесь создавался отдельный баннер — теперь это часть шапки пульта). */
+  window.__PULT_DEMO__ = true;
 })();
