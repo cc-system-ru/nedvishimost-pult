@@ -4,7 +4,7 @@
 <script>/* GitHub Pages и локальный файл: демо-режим без сервера */if(!window.claude&&(/github\.io$/.test(location.hostname)||location.protocol==="file:"||location.hostname==="localhost"))document.write('<script src="app/public/local-shim.js"><\/script>');</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 <style>
 /* Layout: operating console for an agency with 2 offices — left rail (6 views + office switch); each view opens with what needs action, detail below. */
 :root{
@@ -193,6 +193,64 @@ pre.form-out{white-space:pre-wrap;font:inherit;font-size:13.5px;background:var(-
 #ownerKpis,#meKpis{display:none!important} /* v6: заменены первым экраном, цифры не дублируются */
 #mePlan{grid-template-columns:minmax(0,1fr)}
 #mePlan>:nth-child(1),#mePlan>:nth-child(2),#mePlan>:nth-child(4){display:none} /* v6: % плана, run rate и задатки — в плитках первого экрана */
+/* ===================== v7: новая палитра — тёмно-синяя панель, светлый фон, синий акцент ===================== */
+:root{
+  --bg:#F4F6FB; --surface:#FFFFFF; --sunk:#EEF1F8; --ink:#1A1F3A; --muted:#4A5070; --faint:#7B819E; --line:#E4E7F0;
+  --accent:#4361EE; --accent-ink:#FFFFFF; --accent-soft:#E9EDFF;
+  --crit:#E5484D; --crit-soft:#FDEDEE; --warn:#D9811A; --warn-soft:#FEF4E6; --ok:#2E9E6A; --ok-soft:#E7F6EE;
+  --s0:#A3ABC4; --s1:#6C8CF5; --s2:#4361EE; --s3:#7C5CF0; --s4:#E7A23B; --s5:#B064E8; --s6:#2E9E6A; --s7:#E5484D; --s8:#E06BA5;
+  --brand:'Golos Text','Segoe UI',Arial,sans-serif;
+  --rail:#1B2140; --rail-2:#252C52; --rail-ink:#E8EBFA; --rail-muted:#A4ABCB; --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1324; --surface:#171C33; --sunk:#1F2542; --ink:#E9ECFA; --muted:#B7BDD8; --faint:#8C93B3; --line:#2A3152;
+  --accent:#7B93FF; --accent-ink:#0F1324; --accent-soft:#232C5C;
+  --crit:#FF7B7F; --crit-soft:#3A1E26; --warn:#F2B25C; --warn-soft:#3A2C17; --ok:#5ED39A; --ok-soft:#173326;
+  --rail:#0B0F1F; --rail-2:#161B33; --rail-ink:#E8EBFA; --rail-muted:#8F96B8}}
+:root[data-theme="dark"]{--bg:#0F1324; --surface:#171C33; --sunk:#1F2542; --ink:#E9ECFA; --muted:#B7BDD8; --faint:#8C93B3; --line:#2A3152;
+  --accent:#7B93FF; --accent-ink:#0F1324; --accent-soft:#232C5C; --crit:#FF7B7F; --crit-soft:#3A1E26; --warn:#F2B25C; --warn-soft:#3A2C17; --ok:#5ED39A; --ok-soft:#173326;
+  --rail:#0B0F1F; --rail-2:#161B33; --rail-ink:#E8EBFA; --rail-muted:#8F96B8}
+body{letter-spacing:-.003em}
+/* боковая панель: тёмно-синяя */
+aside.rail{background:var(--rail);border-right:0;color:var(--rail-ink)}
+@media (max-width:960px){aside.rail{border-bottom:0}}
+aside.rail .brand b{color:#FFFFFF;font-size:17px;font-weight:800}
+aside.rail .brand span{color:var(--rail-muted)}
+aside.rail label.f{color:var(--rail-muted)}
+aside.rail select,aside.rail input{background:var(--rail-2);border-color:transparent;color:var(--rail-ink)}
+aside.rail select:focus{outline-color:var(--accent)}
+aside.rail .pill.mute{background:rgba(255,255,255,.1);color:var(--rail-ink)}
+aside.rail .btn{background:transparent;border-color:rgba(255,255,255,.18);color:var(--rail-ink)}
+aside.rail .btn:hover{border-color:var(--accent);background:rgba(255,255,255,.06)}
+aside.rail .rail-foot{color:var(--rail-muted)}
+aside.rail .badge{color:#FFFFFF}
+#roleChip{background:rgba(255,255,255,.12)!important;color:#FFFFFF!important}
+nav button{color:var(--rail-muted);font-weight:600}
+nav button:hover{background:rgba(255,255,255,.07);color:#FFFFFF}
+nav button[aria-current="page"]{background:var(--accent);color:#FFFFFF;box-shadow:0 6px 16px rgba(67,97,238,.35)}
+.badge{background:#FF6B6F;color:#FFFFFF}
+/* карточки и плитки */
+.card,.tile{border-color:var(--line);box-shadow:0 1px 2px rgba(26,31,58,.04),0 8px 24px rgba(26,31,58,.06)}
+.tile{border-radius:18px;padding:18px 20px}
+.tile .k{letter-spacing:.03em;font-size:12px;color:var(--faint)}
+.tile .v{font-family:var(--brand);font-weight:800;letter-spacing:-.025em}
+.kpi .v{font-family:var(--brand);font-weight:800}
+.top h1{font-family:var(--brand);font-weight:800;letter-spacing:-.025em}
+.meter{background:var(--sunk);height:7px}.meter i{background:linear-gradient(90deg,#6C8CF5,#4361EE)}
+.btn{border-radius:11px}
+.btn.primary{box-shadow:0 6px 14px rgba(67,97,238,.28)}
+.btn.ai{border-color:var(--accent-soft);background:var(--accent-soft);color:var(--accent)}
+input,select,textarea{background:var(--sunk);border-color:transparent}
+.insight{border-radius:14px;border-left:4px solid currentColor}
+.demobar{border-radius:14px;box-shadow:0 1px 2px rgba(26,31,58,.04),0 8px 24px rgba(26,31,58,.06)}
+.seg button[aria-pressed="true"]{color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#FFFFFF}
+.col{background:var(--sunk);border-radius:16px}
+.lead{border-radius:12px;box-shadow:0 1px 2px rgba(26,31,58,.05)}
+.lead:hover{border-color:var(--accent);box-shadow:0 6px 16px rgba(26,31,58,.08)}
+.alert{background:var(--sunk);border-radius:12px}
+th{color:var(--faint)}
+.banner{border-radius:14px}
 </style>
 
 <div class="app">
