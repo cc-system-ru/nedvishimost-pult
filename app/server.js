@@ -298,11 +298,10 @@ setTimeout(backup, 10000); setInterval(backup, 24 * 3600 * 1000);
 
 /* ---------- демо-данные при первом запуске (SEED_DEMO=1) ---------- */
 if (process.env.SEED_DEMO === '1' && !db.prepare('SELECT COUNT(*) n FROM docs').get().n) {
-  const seed = JSON.parse(fs.readFileSync(path.join(__dirname, 'seed', 'demo.json'), 'utf8'));
-  const shift = Date.now() - seed.exportedAt; // сдвигаем даты демо к сегодняшнему дню
-  const move = v => (typeof v === 'number' && v > 1.7e12 && v < 2.0e12 ? v + shift : Array.isArray(v) ? v.map(move) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, move(x)])) : v);
-  const tx = db.transaction(() => { for (const d of seed.docs) putDoc(d.path, move(d.data)); });
-  tx(); console.log(`Загружено демо-документов: ${seed.docs.length}`);
+  // v9: демо собирается генератором от текущей даты (те же данные, что в демо-витрине)
+  const demo = require('./public/demo-data.js')(Date.now());
+  const tx = db.transaction(() => { for (const d of demo) putDoc(d.path, d.data); });
+  tx(); console.log(`Загружено демо-документов: ${demo.length}`);
 }
 
 app.listen(PORT, () => console.log(`Пульт запущен: http://localhost:${PORT}  (ИИ: ${aiEnabled() ? LLM.provider + ' / ' + LLM.model : 'выключен'})`));

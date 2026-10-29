@@ -4,25 +4,33 @@
  */
 (function () {
   'use strict';
-  const KEY = 'pult_local_db_v1';
+  // v9: новый ключ — у тех, кто уже открывал демо, загрузятся свежие заполненные данные
+  const KEY = 'pult_local_db_v2', DAY_KEY = 'pult_local_db_day';
   let store = null;
   const parentOf = p => p.split('/').slice(0, -1).join('/');
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (_) {} };
+  const todayKey = () => new Date().toDateString();
 
   let loading = null;
   function load() { return (loading = loading || loadOnce()); }
   async function loadOnce() {
     if (store) return store;
-    try { store = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (_) { store = null; }
-    if (!store) {
+    let day = null;
+    try { store = JSON.parse(localStorage.getItem(KEY) || 'null'); day = localStorage.getItem(DAY_KEY); } catch (_) { store = null; }
+    // v9: демо пересобирается каждый новый день, чтобы задачи, отчёты и планёрки были «на сегодня»
+    if (!store || day !== todayKey()) {
       store = {};
-      try {
-        const s = await (await fetch('app/seed/demo.json', { cache: 'no-store' })).json();
-        const shift = Date.now() - s.exportedAt;
-        const move = v => (typeof v === 'number' && v > 1.7e12 && v < 2.0e12 ? v + shift : Array.isArray(v) ? v.map(move) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, move(x)])) : v);
-        for (const d of s.docs) store[d.path] = move(d.data);
-      } catch (_) {}
-      save();
+      if (typeof window.PULT_DEMO_BUILD === 'function') {
+        for (const d of window.PULT_DEMO_BUILD(Date.now())) store[d.path] = d.data;
+      } else {
+        try {
+          const s = await (await fetch('app/seed/demo.json', { cache: 'no-store' })).json();
+          const shift = Date.now() - s.exportedAt;
+          const move = v => (typeof v === 'number' && v > 1.7e12 && v < 2.0e12 ? v + shift : Array.isArray(v) ? v.map(move) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, move(x)])) : v);
+          for (const d of s.docs) store[d.path] = move(d.data);
+        } catch (_) {}
+      }
+      save(); try { localStorage.setItem(DAY_KEY, todayKey()); } catch (_) {}
     }
     return store;
   }
